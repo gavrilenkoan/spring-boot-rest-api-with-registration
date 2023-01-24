@@ -5,11 +5,7 @@ import com.example.demo.dto.RegistrationRequest;
 import com.example.demo.entity.UserEntity;
 import com.example.demo.entity.UserRole;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
