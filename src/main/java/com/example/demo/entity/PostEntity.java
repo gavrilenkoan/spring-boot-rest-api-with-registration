@@ -9,12 +9,13 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "jokes")
-public class JokeEntity {
+@Table(name = "posts")
+public class PostEntity {
 
     @Id
     @GeneratedValue
     private Long id;
+    private String title;
 
     private String text;
 
@@ -22,7 +23,7 @@ public class JokeEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @OneToMany(mappedBy = "joke")
+    @OneToMany(mappedBy = "post")
     private List<ReactionEntity> reactions;
 
 }

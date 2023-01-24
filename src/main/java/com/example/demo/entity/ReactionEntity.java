@@ -17,8 +17,8 @@ public class ReactionEntity {
     private Boolean reaction;
 
     @ManyToOne
-    @JoinColumn(name = "joke_id")
-    private JokeEntity joke;
+    @JoinColumn(name = "post_id")
+    private PostEntity post;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

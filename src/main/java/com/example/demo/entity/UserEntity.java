@@ -38,7 +38,7 @@ public class UserEntity implements UserDetails {
     private UserRole role;
 
     @OneToMany(mappedBy = "user")
-    private List<JokeEntity> jokes;
+    private List<PostEntity> posts;
 
     @OneToMany(mappedBy = "user")
     private List<ReactionEntity> reactions;
@@ -49,7 +49,7 @@ public class UserEntity implements UserDetails {
         this.email = email;
         this.password = password;
         this.role = role;
-        this.jokes = List.of();
+        this.posts = List.of();
         this.reactions = List.of();
     }
 
