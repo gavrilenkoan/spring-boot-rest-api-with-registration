@@ -25,9 +25,9 @@ public class UserEntity implements UserDetails {
     @GeneratedValue
     private Long id;
 
-    private String firstName;
+    private String firstname;
 
-    private String lastName;
+    private String lastname;
 
     @Column(unique = true)
     private String email;
@@ -43,9 +43,9 @@ public class UserEntity implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<ReactionEntity> reactions;
 
-    public UserEntity(String firstName, String lastName, String email, String password, UserRole role) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public UserEntity(String firstname, String lastname, String email, String password, UserRole role) {
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.email = email;
         this.password = password;
         this.role = role;

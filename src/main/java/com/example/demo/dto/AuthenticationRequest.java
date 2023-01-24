@@ -1,16 +1,13 @@
 package com.example.demo.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class AuthenticationRequest {
 
-    private final String email;
-    private final String password;
+    private String email;
+    private String password;
 }
