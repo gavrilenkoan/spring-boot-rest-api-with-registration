@@ -1,7 +1,9 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -10,6 +12,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "posts")
+@NoArgsConstructor
 public class PostEntity {
 
     @Id
@@ -19,6 +22,7 @@ public class PostEntity {
 
     private String text;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
@@ -26,4 +30,10 @@ public class PostEntity {
     @OneToMany(mappedBy = "post")
     private List<ReactionEntity> reactions;
 
+    public PostEntity(String title, String text, UserEntity user) {
+        this.title = title;
+        this.text = text;
+        this.user = user;
+        this.reactions = List.of();
+    }
 }
