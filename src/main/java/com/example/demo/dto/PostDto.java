@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class PostDto {
 
     private String title;
-    private String description;
+    private String text;
 }
 
