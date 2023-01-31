@@ -22,16 +22,26 @@ public class ReactionController {
     private JwtService jwtService;
 
     @GetMapping
-    public ResponseEntity<List<ReactionEntity>> getReactions(HttpServletRequest request) {
+    public ResponseEntity<List<ReactionEntity>> getAuthenticatedUserReactions(HttpServletRequest request) {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
-        return ResponseEntity.ok(reactionService.getReactions(jwtService.extractUsername(token)));
+        return ResponseEntity.ok(reactionService.getAuthenticatedUserReactions(jwtService.extractUsername(token)));
     }
 
-
-
-    @PostMapping("/{postId}")
-    public ResponseEntity<ReactionEntity> createReaction(HttpServletRequest request, @PathVariable Long postId, @RequestBody ReactionDto reactionDto) {
+    @PostMapping
+    public ResponseEntity<ReactionEntity> createReaction(HttpServletRequest request, @RequestParam Long postId, @RequestBody ReactionDto reactionDto) {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         return ResponseEntity.ok(reactionService.createReaction(jwtService.extractUsername(token), postId, reactionDto));
+    }
+
+    @PutMapping
+    public ResponseEntity<ReactionEntity> updateReaction(HttpServletRequest request, @RequestParam Long postId, @RequestBody ReactionDto reactionDto) {
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+        return ResponseEntity.ok(reactionService.updateReaction(jwtService.extractUsername(token), postId, reactionDto));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<ReactionEntity> deleteReaction(HttpServletRequest request, @RequestParam Long postId) {
+        String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
+        return ResponseEntity.ok(reactionService.deleteReaction(jwtService.extractUsername(token), postId));
     }
 }
