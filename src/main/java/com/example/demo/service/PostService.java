@@ -26,12 +26,6 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public List<PostEntity> getAuthenticatedUsersPosts(String email) {
-        UserEntity user = userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(("user with email " + email + "not found")));
-        return user.getPosts();
-    }
-
     public List<PostEntity> getUsersPosts(Long userId) {
         UserEntity user = userRepository.findUserById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException(("user with email " + userId + "not found")));

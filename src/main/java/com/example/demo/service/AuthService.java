@@ -1,9 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.config.JwtService;
-import com.example.demo.dto.AuthenticationRequest;
-import com.example.demo.dto.AuthenticationResponse;
-import com.example.demo.dto.RegistrationRequest;
+import com.example.demo.dto.AuthenticationDto;
+import com.example.demo.dto.RegistrationDto;
 import com.example.demo.entity.UserEntity;
 import com.example.demo.entity.UserRole;
 import com.example.demo.repository.UserRepository;
@@ -20,7 +19,7 @@ public class AuthService {
     private final JwtService jwtService;
 
 
-    public AuthenticationResponse register(RegistrationRequest request) {
+    public String register(RegistrationDto request) {
         UserEntity user = new UserEntity(
                         request.getFirstname(),
                         request.getLastname(),
@@ -38,22 +37,16 @@ public class AuthService {
 
         userRepository.save(user);
 
-        String jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+        return jwtService.generateToken(user);
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public String authenticate(AuthenticationDto request) {
         UserEntity user = userRepository.findUserByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalStateException("no user with email " + request.getEmail()));
 
         if (!bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new IllegalStateException("wrong credentials");
         }
-        String jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+        return jwtService.generateToken(user);
     }
 }
