@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,10 +26,6 @@ public class JwtService {
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
-    }
-
-    public Collection extractRoles(String token) {
-        return extractAllClaims(token).get("roles", Collection.class);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
