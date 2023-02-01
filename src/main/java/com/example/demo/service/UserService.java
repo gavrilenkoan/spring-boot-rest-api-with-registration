@@ -66,6 +66,7 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(("user with id " + id + "not found")));
 
         reactionRepository.deleteAll(reactionRepository.findAll().stream().filter(r -> r.getUser() == user).toList());
+        reactionRepository.deleteAll(reactionRepository.findAll().stream().filter(r -> r.getPost().getUser() == user).toList());
         postRepository.deleteAll(postRepository.findAll().stream().filter(p -> p.getUser() == user).toList());
         userRepository.deleteById(id);
         return "deleted successfully";

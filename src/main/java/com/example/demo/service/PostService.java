@@ -8,7 +8,6 @@ import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.ReactionRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +29,7 @@ public class PostService {
 
     public List<Post> getUsersPosts(Long userId) {
         UserEntity user = userRepository.findUserById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException(("user with email " + userId + "not found")));
+                .orElseThrow(() -> new IllegalStateException("user with id " + userId + "not found"));
         return user.getPosts().stream().map(Post::toModel).collect(Collectors.toList());
     }
 
