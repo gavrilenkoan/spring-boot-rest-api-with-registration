@@ -29,7 +29,7 @@ public class PostController {
     @GetMapping
     public ResponseEntity<List<PostEntity>> getAuthenticatedUsersPosts(HttpServletRequest request) {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
-        return ResponseEntity.ok(postService.getUsersPosts(Long.parseLong(jwtService.extractId(token))));
+        return ResponseEntity.ok(postService.getUsersPosts(jwtService.extractId(token)));
     }
 
     @GetMapping("/{userId}")

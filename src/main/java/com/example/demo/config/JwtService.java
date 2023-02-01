@@ -21,8 +21,8 @@ public class JwtService {
 
     private final String SECRET_KEY = "26452948404D635166546A576E5A7234743777217A25432A462D4A614E645267";
 
-    public String extractId(String token) {
-        return extractClaim(token, Claims::getId);
+    public Long extractId(String token) {
+        return extractAllClaims(token).get("id", Long.class);
     }
 
     public String extractUsername(String token) {
@@ -47,22 +47,22 @@ public class JwtService {
                 .getBody();
     }
 
-    public String generateToken(Map<String, Object> claims, UserEntity userDetails) {
+    public String generateToken(Map<String, Object> claims, UserEntity user) {
         return Jwts
                 .builder()
                 .setClaims(claims)
-                .setId(userDetails.getId().toString())
-                .setSubject(userDetails.getUsername())
+                .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 25))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String generateToken(UserEntity userDetails) {
+    public String generateToken(UserEntity user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("roles", userDetails.getAuthorities());
-        return generateToken(claims, userDetails);
+        claims.put("id", user.getId());
+        claims.put("roles", user.getAuthorities());
+        return generateToken(claims, user);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
