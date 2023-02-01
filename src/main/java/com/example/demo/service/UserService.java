@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.RegistrationDto;
 import com.example.demo.entity.UserEntity;
+import com.example.demo.model.User;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.ReactionRepository;
 import com.example.demo.repository.UserRepository;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -31,17 +33,17 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(("user with email " + email + "not found")));
     }
 
-    public List<UserEntity> getAllUsers() {
-        return userRepository.findAll();
+    public List<User> getAllUsers() {
+        return userRepository.findAll().stream().map(User::toModel).collect(Collectors.toList());
     }
 
-    public UserEntity getUser(Long id) {
-        return userRepository.findUserById(id)
-                .orElseThrow(() -> new IllegalStateException(("post with id " + id + "not found")));
+    public User getUser(Long id) {
+        return User.toModel(userRepository.findUserById(id)
+                .orElseThrow(() -> new IllegalStateException(("post with id " + id + "not found"))));
     }
 
     @Transactional
-    public UserEntity updateUser(Long id, RegistrationDto userDto) {
+    public User updateUser(Long id, RegistrationDto userDto) {
         UserEntity user = userRepository.findUserById(id)
                 .orElseThrow(() -> new IllegalStateException(("post with id " + id + "not found")));
         if (userDto.getFirstname() != null && !Objects.equals(userDto.getFirstname(), "")) {
@@ -56,7 +58,7 @@ public class UserService implements UserDetailsService {
         if (userDto.getEmail() != null && !Objects.equals(userDto.getEmail(), "") && userRepository.findUserByEmail(userDto.getEmail()).isEmpty()) {
             user.setEmail(userDto.getEmail());
         }
-        return user;
+        return User.toModel(user);
     }
 
     public String deleteUser(Long id) {

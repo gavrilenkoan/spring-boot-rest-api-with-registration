@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.config.JwtService;
 import com.example.demo.dto.RegistrationDto;
-import com.example.demo.entity.UserEntity;
+import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -22,23 +22,23 @@ public class UserController {
     private final JwtService jwtService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<UserEntity>> getAllUsers() {
+    public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping
-    public ResponseEntity<UserEntity> getAuthenticatedUser(HttpServletRequest request) {
+    public ResponseEntity<User> getAuthenticatedUser(HttpServletRequest request) {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         return ResponseEntity.ok(userService.getUser(jwtService.extractId(token)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserEntity> getUser(@PathVariable Long id) {
+    public ResponseEntity<User> getUser(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUser(id));
     }
 
     @PutMapping
-    public ResponseEntity<UserEntity> updateUser(HttpServletRequest request, @RequestBody RegistrationDto userDto) {
+    public ResponseEntity<User> updateUser(HttpServletRequest request, @RequestBody RegistrationDto userDto) {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
         return ResponseEntity.ok(userService.updateUser(jwtService.extractId(token), userDto));
     }

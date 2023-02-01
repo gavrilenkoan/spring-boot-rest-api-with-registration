@@ -4,6 +4,7 @@ import com.example.demo.dto.ReactionDto;
 import com.example.demo.entity.PostEntity;
 import com.example.demo.entity.ReactionEntity;
 import com.example.demo.entity.UserEntity;
+import com.example.demo.model.Reaction;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.ReactionRepository;
 import com.example.demo.repository.UserRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -35,14 +37,14 @@ public class ReactionService {
     }
 
 
-    public List<ReactionEntity> getAuthenticatedUserReactions(String email) {
+    public List<Reaction> getAuthenticatedUserReactions(String email) {
         UserEntity user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(("user with email " + email + "not found")));
 
-        return user.getReactions();
+        return user.getReactions().stream().map(Reaction::toModel).collect(Collectors.toList());
     }
 
-    public ReactionEntity createReaction(String email, Long postId, ReactionDto reactionDto) {
+    public Reaction createReaction(String email, Long postId, ReactionDto reactionDto) {
         UserEntity user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(("user with email " + email + "not found")));
         PostEntity post = postRepository.findPostById(postId)
@@ -52,26 +54,26 @@ public class ReactionService {
             throw new IllegalStateException();
         }
 
-        ReactionEntity reactionEntity = new ReactionEntity(reactionDto.getReaction(), post, user);
+        ReactionEntity reaction = new ReactionEntity(reactionDto.getReaction(), post, user);
 
-        post.getReactions().add(reactionEntity);
-        user.getReactions().add(reactionEntity);
-        reactionRepository.save(reactionEntity);
-        return reactionEntity;
+        post.getReactions().add(reaction);
+        user.getReactions().add(reaction);
+        reactionRepository.save(reaction);
+        return Reaction.toModel(reaction);
     }
 
     @Transactional
-    public ReactionEntity updateReaction(String email, Long postId, ReactionDto reactionDto) {
+    public Reaction updateReaction(String email, Long postId, ReactionDto reactionDto) {
         ReactionEntity reaction = findReactionByUserEmailAndPostId(email, postId);
         if (reactionDto.getReaction() != null) {
             reaction.setReaction(reactionDto.getReaction());
         }
-        return reaction;
+        return Reaction.toModel(reaction);
     }
 
-    public ReactionEntity deleteReaction(String email, Long postId) {
+    public Reaction deleteReaction(String email, Long postId) {
         ReactionEntity reaction = findReactionByUserEmailAndPostId(email, postId);
         reactionRepository.delete(reaction);
-        return reaction;
+        return Reaction.toModel(reaction);
     }
 }

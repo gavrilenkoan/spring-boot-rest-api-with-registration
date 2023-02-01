@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.PostDto;
 import com.example.demo.entity.PostEntity;
 import com.example.demo.entity.UserEntity;
+import com.example.demo.model.Post;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.ReactionRepository;
 import com.example.demo.repository.UserRepository;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -22,32 +24,32 @@ public class PostService {
     private final PostRepository postRepository;
     private final ReactionRepository reactionRepository;
 
-    public List<PostEntity> getAllPosts() {
-        return postRepository.findAll();
+    public List<Post> getAllPosts() {
+        return postRepository.findAll().stream().map(Post::toModel).collect(Collectors.toList());
     }
 
-    public List<PostEntity> getUsersPosts(Long userId) {
+    public List<Post> getUsersPosts(Long userId) {
         UserEntity user = userRepository.findUserById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException(("user with email " + userId + "not found")));
-        return user.getPosts();
+        return user.getPosts().stream().map(Post::toModel).collect(Collectors.toList());
     }
 
-    public PostEntity createPost(String email, PostDto postDto) {
+    public Post createPost(String email, PostDto postDto) {
         UserEntity user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(("user with email " + email + "not found")));
         PostEntity post = new PostEntity(postDto.getTitle(), postDto.getText(), user);
         user.getPosts().add(post);
         postRepository.save(post);
-        return post;
+        return Post.toModel(post);
     }
 
-    public PostEntity getPost(Long postId) {
-        return postRepository.findPostById(postId)
-                .orElseThrow(() -> new IllegalStateException(("post with id " + postId + "not found")));
+    public Post getPost(Long postId) {
+        return Post.toModel(postRepository.findPostById(postId)
+                .orElseThrow(() -> new IllegalStateException(("post with id " + postId + "not found"))));
     }
 
     @Transactional
-    public PostEntity updatePost(String email, Long postId, PostDto postDto) {
+    public Post updatePost(String email, Long postId, PostDto postDto) {
         UserEntity user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(("user with email " + email + "not found")));
         PostEntity post = postRepository.findPostById(postId)
@@ -61,7 +63,7 @@ public class PostService {
         if (postDto.getText() != null && !Objects.equals(postDto.getText(), "")) {
             post.setText(postDto.getText());
         }
-        return post;
+        return Post.toModel(post);
     }
 
     public String deletePost(String email, Long postId) {
