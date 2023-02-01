@@ -45,18 +45,18 @@ public class PostController {
     @PostMapping
     public ResponseEntity<Post> createPost(HttpServletRequest request, @RequestBody PostDto postDto) {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
-        return ResponseEntity.ok(postService.createPost(jwtService.extractUsername(token), postDto));
+        return ResponseEntity.ok(postService.createPost(jwtService.extractId(token), postDto));
     }
 
     @PutMapping
     public ResponseEntity<Post> updatePost(HttpServletRequest request, @RequestParam Long postId, @RequestBody PostDto postDto) {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
-        return ResponseEntity.ok(postService.updatePost(jwtService.extractUsername(token), postId, postDto));
+        return ResponseEntity.ok(postService.updatePost(jwtService.extractId(token), postId, postDto));
     }
 
     @DeleteMapping
     public ResponseEntity<String> deletePost(HttpServletRequest request, @RequestParam Long postId) {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
-        return ResponseEntity.ok(postService.deletePost(jwtService.extractUsername(token), postId));
+        return ResponseEntity.ok(postService.deletePost(jwtService.extractId(token), postId));
     }
 }

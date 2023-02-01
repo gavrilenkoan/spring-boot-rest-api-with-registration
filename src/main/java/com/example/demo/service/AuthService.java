@@ -27,9 +27,8 @@ public class AuthService {
                         request.getPassword(),
                         UserRole.ROLE_USER
         );
-        boolean userExists = userRepository.findUserByEmail(user.getEmail()).isPresent();
 
-        if (userExists) {
+        if (userRepository.findUserByEmail(user.getEmail()).isPresent()) {
             throw new IllegalStateException("email already taken");
         }
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());

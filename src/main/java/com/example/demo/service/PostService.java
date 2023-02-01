@@ -34,9 +34,9 @@ public class PostService {
         return user.getPosts().stream().map(Post::toModel).collect(Collectors.toList());
     }
 
-    public Post createPost(String email, PostDto postDto) {
-        UserEntity user = userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(("user with email " + email + "not found")));
+    public Post createPost(Long userId, PostDto postDto) {
+        UserEntity user = userRepository.findUserById(userId)
+                .orElseThrow(() -> new IllegalStateException("user with id " + userId + "not found"));
         PostEntity post = new PostEntity(postDto.getTitle(), postDto.getText(), user);
         user.getPosts().add(post);
         postRepository.save(post);
@@ -49,9 +49,9 @@ public class PostService {
     }
 
     @Transactional
-    public Post updatePost(String email, Long postId, PostDto postDto) {
-        UserEntity user = userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(("user with email " + email + "not found")));
+    public Post updatePost(Long userId, Long postId, PostDto postDto) {
+        UserEntity user = userRepository.findUserById(userId)
+                .orElseThrow(() -> new IllegalStateException("user with id " + userId + "not found"));
         PostEntity post = postRepository.findPostById(postId)
                 .orElseThrow(() -> new IllegalStateException(("post with id " + postId + "not found")));
         if (post.getUser() != user) {
@@ -66,9 +66,9 @@ public class PostService {
         return Post.toModel(post);
     }
 
-    public String deletePost(String email, Long postId) {
-        UserEntity user = userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(("user with email " + email + "not found")));
+    public String deletePost(Long userId, Long postId) {
+        UserEntity user = userRepository.findUserById(userId)
+                .orElseThrow(() -> new IllegalStateException("user with id " + userId + "not found"));
         PostEntity post = postRepository.findPostById(postId)
                 .orElseThrow(() -> new IllegalStateException(("post with id " + postId + "not found")));
         if (post.getUser() != user) {

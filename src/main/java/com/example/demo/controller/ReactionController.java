@@ -24,24 +24,26 @@ public class ReactionController {
     @GetMapping
     public ResponseEntity<List<Reaction>> getAuthenticatedUserReactions(HttpServletRequest request) {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
-        return ResponseEntity.ok(reactionService.getAuthenticatedUserReactions(jwtService.extractUsername(token)));
+        return ResponseEntity.ok(reactionService.getAuthenticatedUserReactions(jwtService.extractId(token)));
     }
 
     @PostMapping
-    public ResponseEntity<Reaction> createReaction(HttpServletRequest request, @RequestParam Long postId, @RequestBody ReactionDto reactionDto) {
+    public ResponseEntity<Reaction> createReaction(HttpServletRequest request, @RequestParam Long postId,
+                                                   @RequestBody ReactionDto reactionDto) {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
-        return ResponseEntity.ok(reactionService.createReaction(jwtService.extractUsername(token), postId, reactionDto));
+        return ResponseEntity.ok(reactionService.createReaction(jwtService.extractId(token), postId, reactionDto));
     }
 
     @PutMapping
-    public ResponseEntity<Reaction> updateReaction(HttpServletRequest request, @RequestParam Long postId, @RequestBody ReactionDto reactionDto) {
+    public ResponseEntity<Reaction> updateReaction(HttpServletRequest request, @RequestParam Long postId,
+                                                   @RequestBody ReactionDto reactionDto) {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
-        return ResponseEntity.ok(reactionService.updateReaction(jwtService.extractUsername(token), postId, reactionDto));
+        return ResponseEntity.ok(reactionService.updateReaction(jwtService.extractId(token), postId, reactionDto));
     }
 
     @DeleteMapping
     public ResponseEntity<Reaction> deleteReaction(HttpServletRequest request, @RequestParam Long postId) {
         String token = request.getHeader(AUTHORIZATION).substring("Bearer ".length());
-        return ResponseEntity.ok(reactionService.deleteReaction(jwtService.extractUsername(token), postId));
+        return ResponseEntity.ok(reactionService.deleteReaction(jwtService.extractId(token), postId));
     }
 }

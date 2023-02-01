@@ -9,7 +9,6 @@ import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.ReactionRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +23,9 @@ public class ReactionService {
     private final PostRepository postRepository;
     private final ReactionRepository reactionRepository;
 
-    private ReactionEntity findReactionByUserEmailAndPostId(String email, Long postId) {
-        UserEntity user = userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(("user with email " + email + "not found")));
+    private ReactionEntity findReactionByUserIdAndPostId(Long userId, Long postId) {
+        UserEntity user = userRepository.findUserById(userId)
+                .orElseThrow(() -> new IllegalStateException(("user with email " + userId + "not found")));
 
         if (reactionRepository.findReactionByUserIdAndPostId(user.getId(), postId).isEmpty()) {
             throw new IllegalStateException();
@@ -37,16 +36,16 @@ public class ReactionService {
     }
 
 
-    public List<Reaction> getAuthenticatedUserReactions(String email) {
-        UserEntity user = userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(("user with email " + email + "not found")));
+    public List<Reaction> getAuthenticatedUserReactions(Long userId) {
+        UserEntity user = userRepository.findUserById(userId)
+                .orElseThrow(() -> new IllegalStateException(("user with email " + userId + "not found")));
 
         return user.getReactions().stream().map(Reaction::toModel).collect(Collectors.toList());
     }
 
-    public Reaction createReaction(String email, Long postId, ReactionDto reactionDto) {
-        UserEntity user = userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(("user with email " + email + "not found")));
+    public Reaction createReaction(Long userId, Long postId, ReactionDto reactionDto) {
+        UserEntity user = userRepository.findUserById(userId)
+                .orElseThrow(() -> new IllegalStateException(("user with email " + userId + "not found")));
         PostEntity post = postRepository.findPostById(postId)
                 .orElseThrow(() -> new IllegalStateException(("post with id " + postId + "not found")));
 
@@ -63,16 +62,16 @@ public class ReactionService {
     }
 
     @Transactional
-    public Reaction updateReaction(String email, Long postId, ReactionDto reactionDto) {
-        ReactionEntity reaction = findReactionByUserEmailAndPostId(email, postId);
+    public Reaction updateReaction(Long userId, Long postId, ReactionDto reactionDto) {
+        ReactionEntity reaction = findReactionByUserIdAndPostId(userId, postId);
         if (reactionDto.getReaction() != null) {
             reaction.setReaction(reactionDto.getReaction());
         }
         return Reaction.toModel(reaction);
     }
 
-    public Reaction deleteReaction(String email, Long postId) {
-        ReactionEntity reaction = findReactionByUserEmailAndPostId(email, postId);
+    public Reaction deleteReaction(Long userId, Long postId) {
+        ReactionEntity reaction = findReactionByUserIdAndPostId(userId, postId);
         reactionRepository.delete(reaction);
         return Reaction.toModel(reaction);
     }
