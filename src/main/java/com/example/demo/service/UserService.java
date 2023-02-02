@@ -39,13 +39,13 @@ public class UserService implements UserDetailsService {
 
     public User getUser(Long id) {
         return User.toModel(userRepository.findUserById(id)
-                .orElseThrow(() -> new IllegalStateException(("post with id " + id + "not found"))));
+                .orElseThrow(() -> new IllegalStateException(("user with id " + id + "not found"))));
     }
 
     @Transactional
     public User updateUser(Long id, RegistrationDto userDto) {
         UserEntity user = userRepository.findUserById(id)
-                .orElseThrow(() -> new IllegalStateException(("post with id " + id + "not found")));
+                .orElseThrow(() -> new IllegalStateException(("user with id " + id + "not found")));
         if (userDto.getFirstname() != null && !Objects.equals(userDto.getFirstname(), "")) {
             user.setFirstname(userDto.getFirstname());
         }
