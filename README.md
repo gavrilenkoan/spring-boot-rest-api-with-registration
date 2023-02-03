@@ -10,7 +10,7 @@ This is a blog REST API with the implementation of security using Spring Boot 3.
 
 ## Database diagram
 
-[![db-diagram.png](https://i.postimg.cc/KYwLCQBL/db-diagram.png)](https://postimg.cc/XZKpCf27)
+[![db-diagram.png](https://i.postimg.cc/ncJY1H4J/db-diagram.png)](https://postimg.cc/grgZzbtS)
 
 ## Features
 * User registration and login with JWT authentication
