@@ -23,17 +23,21 @@ This is a blog REST API with the implementation of security using Spring Boot 3.
 * JSON Web Tokens (JWT)
 * BCrypt
 * Maven
+* PostgreSQL
 
 ## Getting Started
 To get started with this project, you will need to have the following installed on your local machine:
 
 * JDK 17+
 * Maven 3+
+* PostgreSQL
 
 To build and run the project, follow these steps:
 
 * Clone the repository: `git clone https://github.com/gavrilenkoan/spring-boot-rest-api-with-registration.git`
 * Navigate to the project directory: cd spring-boot-rest-api-with-registration
+* Create database with name blog
+* Add username and password to application.properties
 * Build the project: mvn clean install
 * Run the project: mvn spring-boot:run
 
